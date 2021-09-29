@@ -1,6 +1,7 @@
 <?php
 require_once ('./wp-load.php');
 
+// 返信内容の振り分け
 function reply_type_select($jsonObject){
     $messageType = $jsonObject->{"events"}[0]->{"message"}->{"type"};
     $new = ['最新', 'さいしん'];
@@ -30,6 +31,7 @@ function reply_type_select($jsonObject){
     }
 }
 
+// オプションを表示する返信
 function reply_functions(){
     $text = [
         'type'  => 'text',
@@ -41,6 +43,7 @@ function reply_functions(){
     return $messages;
 }
 
+// 未定義入力に対する返信
 function reply_undefined(){
     $emojis = [
         [
@@ -75,6 +78,7 @@ function reply_undefined(){
     return $messages;
 }
 
+// 記事の返信
 function reply_post($post){
     $uri = [
         'type' => 'uri',
@@ -101,6 +105,7 @@ function reply_post($post){
     return $messages;
 }
 
+// スタンプの返信
 function reply_random_sticker(){
     $packageID = 11537 + mt_rand(0, 2);
     switch($packageID){
@@ -119,6 +124,7 @@ function reply_random_sticker(){
     return $messages;
 }
 
+// 天気の返信（現在使用不可）
 function reply_weather(){
     $fukuoka = 400010;
     $baseUrl = 'http://weather.livedoor.com/forecast/webservice/json/v1?city='.$fukuoka;
@@ -133,6 +139,7 @@ function reply_weather(){
     return $messages;
 }
 
+// 天気を絵文字に変換
 function weather_to_emoji($weather){
     $wez = ['晴', '曇', '雨', '雪'];
     $tra = ['のち', '時々', '一時'];
@@ -197,4 +204,29 @@ function weather_to_emoji($weather){
         'emojis' => $emojis
     ];
     return $text;
+}
+
+// ランダム記事取得関数（実際はCodeSnippets内に記述）
+function get_random_article() { 
+	$args = array( 
+		'posts_per_page' =>1, 
+		'orderby'          => 'rand',
+		'post_type'        => 'post',
+	);
+	$my_posts = get_posts( $args );
+	wp_reset_postdata();
+	return $my_posts[0];
+}
+
+// 最新記事取得関数（実際はCodeSnippets内に記述）
+function get_last_article() { 
+	$args = array(
+		'posts_per_page' => 1, 
+		'orderby' => 'date',
+		'order' => 'DESC',
+		'post_type' => 'post',
+	);
+	$my_posts = get_posts($args);
+	wp_reset_postdata();
+	return $my_posts[0];
 }
